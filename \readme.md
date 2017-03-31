@@ -1,12 +1,13 @@
 # TeensyDelay
 ## Problem to be solved 
-Some external devices need rather long control pulses to operate correctly. Especially devices with opto-coupled control inputs like power stepper motor drivers can require pulse lenghts in the 10µs range. Even a simple DRV8825 drvier requires a pulse width of about 2-3µs for a reliable operation. The straight forward approach to generate such pulses would be:
+Some external devices need rather long control pulses to operate correctly. Especially devices with opto-coupled control inputs like power stepper motor drivers can require pulse lengths in the 10µs range. Even a simple DRV8825 driver requires a pulse width of about 2-3µs for a reliable operation. The straight forward approach to generate such pulses would be:
 ```c++
-...
-digitalWriteFast(somePIN,HIGH)
-delayMicroseconds(10)
-digitalWriteFast(somePIN,LOW)
-...
+void pulse()
+{
+	digitalWriteFast(somePIN,HIGH);
+	delayMicroseconds(10);
+	digitalWriteFast(somePIN,LOW);
+}
 ```
 This is fine of course as long as you don't need high repetition rates. However, in real life situations the seemingly harmless delay of 10µs can generate quite some load on the processor. Lets assume that we want to use a Leadshine DM422 to drive a stepper motor at a speed of 1000 rpm with a mircostep resolution of 1/32. With the usual motor resulution of 200 full steps/rev we need a pulse rate *r* of
 
