@@ -1,17 +1,16 @@
 #pragma once
 #include "config.h"
 
-extern void panic();
 
 namespace TeensyDelay
 {
-    extern void begin(void);
+    extern void begin(void);  
 
     extern void addDelayChannel(void(*_callback)(void), const int nr = 0);
 
     inline void trigger(const float delay, const int channel = 0)
     {
-        //digitalWriteFast(0, HIGH);
+        digitalWriteFast(0, HIGH); 
 
         timer->SC = 0;                                                  // Remove clock to immediately write new channel value
         timer->CH[channel].CV = timer->CNT + microsToReload(delay);     // Update channel value
@@ -25,6 +24,6 @@ namespace TeensyDelay
         }                                                              // isFTM is a compile time constant -> compiler completely optimizes the not valid case away
         timer->CH[channel].SC = FTM_CSC_MSA | FTM_CSC_CHIE;
 
-        //digitalWriteFast(0, LOW);
+        digitalWriteFast(0, LOW);
     }
 }
