@@ -2,7 +2,7 @@
 // Available timer modules for the Teensy XX boards. Please note that those 
 // timers are also used by the core libraries for PWM and AnalogWrite. 
 // Therefore, choose a timer which isn't attached to the pins you need for 
-// PWM or AnalogWrite. See XXXX for further details
+// PWM or AnalogWrite. (TEENSY LC not yet supported)
 //
 // D: Default, X: available
 //
@@ -13,9 +13,9 @@
 #define TIMER_FTM1 2  //|   2     |      |  X   |   X   |  X   |  X   |  X  |
 #define TIMER_FTM2 3  //|   2     |      |      |   X   |  X   |  X   |  X  |
 #define TIMER_FTM3 4  //|   8     |      |      |       |      |  X   |  X  |
-#define TIMER_TPM0 5  //|   6     |  D   |      |       |      |      |     |
-#define TIMER_TPM1 6  //|   2     |  X   |      |       |      |      |  X  |
-#define TIMER_TPM2 7  //|   2     |  X   |      |       |      |      |  X  |
+#define TIMER_TPM0 5  //|   6     |      |      |       |      |      |     |
+#define TIMER_TPM1 6  //|   2     |      |      |       |      |      |  X  |
+#define TIMER_TPM2 7  //|   2     |      |      |       |      |      |  X  |
 #define TIMER_DEFAULT -1
 
 // If you need a special timer, please replace "TIMER_DEFAULT" by a timer from the list above
@@ -111,7 +111,7 @@ namespace TeensyDelay
 
     constexpr uint32_t TimerBaseAddr[][7] =
     { //    FTM0         FTM1        FTM2        FTM3        TPM0        TMP1        TMP2
-        { 0,          0,          0,          0,          0x40038000, 0x40039000, 0x4003A000 },  // Teensy LC
+        { 0,          0,          0,          0,          0,          0,          0          },  // Teensy LC not yet supported
         { 0x40038000, 0x40039000, 0,          0,          0,          0,          0,         },  // Teensy 3.0
         { 0x40038000, 0x40039000, 0x400B8000, 0,          0,          0,          0,         },  // Teensy 3.1/3.2
         { 0x40038000, 0x40039000, 0x400B8000, 0x400B9000, 0,          0,          0,         },  // Teensy 3.5
@@ -121,7 +121,7 @@ namespace TeensyDelay
     constexpr int IRQ_Number[][7]
     {
         //  FTM0  FTM1  FTM2  FTM3  TPM0  TPM1  TPM2
-          { 17,   18,   19,    0,    0,    0,    0 },  // Teensy LC
+          {  0,    0,   0,     0,    0,    0,    0 },  // Teensy LC
           { 25,   26,   0,     0,    0,    0,    0 },  // Teensy 3.0
           { 62,   63,   64,    0,    0,    0,    0 },  // Teensy 3.1/3.2
           { 42,   43,   44,   71,    0,    0,    0 },  // Teensy 3.5

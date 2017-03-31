@@ -72,8 +72,7 @@ void tpm1_isr(void)
 #elif USE_TIMER == TIMER_TPM2
 void tpm2_isr(void)
 #endif
-{
-    //digitalWriteFast(1, HIGH);
+{  
     uint32_t status = TeensyDelay::timer->STATUS & 0x0F;   // STATUS collects all channel event flags (bit0 = ch0, bit1 = ch1....) 
 
     unsigned i = 0;
@@ -96,5 +95,4 @@ void tpm2_isr(void)
         i++;
         status >>= 1;
     }
-//    digitalWriteFast(1, LOW);
 }
