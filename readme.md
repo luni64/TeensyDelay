@@ -24,18 +24,19 @@ I.e, in this example the simple task of driving a stepper with 1000rpm would  ke
 ## Purpose of the Library
 This problem can easily be solved  by the usual procedure
 - Set the step pin to HIGH
-- Calculate timer overflow value to generate the required delay and start timer
+- Calculate timer overflow value to generate the required delay 
+- Start timer
 - Reset the step pin during the timer interrupt service routine
 - Stop the timer
 
-**TeensyDelay** provides an easy to use interface to perform this task without requiring the user to fiddle around with interrupt programming. It does not waste one of the 'valuable' 32bit PIT timers but uses one of the hardly used FTM or TPM timers instead. It provides up to 8 independent delay channels. **TeensyDelay** is compatible to Teensy LC, Teensy 3.0, Teensy 3.1/3.2, Teensy 3.5 and Teensy 3.6. 
+**TeensyDelay** provides an easy to use interface to perform this task without requiring the user to fiddle around with interrupt programming. Additionally it does not waste any of the 'valuable' 32bit PIT timers but uses one of the hardly used FTM or TPM timers instead (selectable). Depending on the chosen timer it provides up to 8 independent delay channels. **TeensyDelay** is compatible to T Teensy 3.0, Teensy 3.1/3.2, Teensy 3.5 and Teensy 3.6. Compatibility to Teensy LC will be added later.
 
 ## Usage
 ###  Basic example
 The following code demonstrates the use of TeensyDelay.
 
 - **setup**: After initializing the library with the usual call to *begin*  we call *addChannel* to add a new delay channel and attach a callback function to it. 
-- **loop**; After switching on the builtin LED we start the delay channel by calling *TeensyDelay::trigger* with a delay time of 25ms. The trigger function will take care of setting up and starting the interrupt timer so that the callback function will be called after the chosen delay time. The callback function of this simple example does nothing more than switching off the LED.  
+- **loop**; After switching on the builtin LED we start the delay channel by calling *TeensyDelay::trigger* with a delay time of 25ms. The trigger function will take care of setting up and starting the interrupt timer so that the callback function will be called after the chosen delay time. The callback function in this simple example does nothing more than switching off the LED.  
 ```c++
 #include "TeensyDelay.h"
 
@@ -62,7 +63,7 @@ void  loop()
 ## Performance
 The library is optimized for speed (obviously, it wouldn't make much sense to use an interrupt driven pulse generation if the interrupt and trigger functions would eat up the same processor time as the simple delay in the first code block above)
 
-To anlayze the performance of the library I added code to set pin 0 HIGH during the the trigger function and code to set pin 1 HIGH during theinterrupt service routine. Trigger delay was set to 10µs. The shown measurement was done using a Teensy 3.6.
+To anlayze the performance of the library I added code to set pin 0 HIGH during the the trigger function and code to set pin 1 HIGH during the interrupt service routine. Trigger delay was set to 10µs. The shown measurement was done using a Teensy 3.6.
 
 
 ![Alt text](/media/timing.PNG?raw=true "Logic analyzer trace")
