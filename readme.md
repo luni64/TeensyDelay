@@ -1,11 +1,6 @@
-# Work in progress
-NOT FUNCTIONAL CURRENTLY
-
-
-
 # TeensyDelay
-## Purpose of the library
-Some external devices like stepper motor drivers need rather long control pulses to operate correctly. Especially devices with opto coupled control inputs can require pulse lenghts in the 10µs range. A straight forward approach to this problem would be
+## Problem to be solved 
+Some external devices need rather long control pulses to operate correctly. Especially devices with opto-coupled control inputs like power stepper motor drivers can require pulse lenghts in the 10µs range. Even a simple DRV8825 drvier requires a pulse width of about 2-3µs for a reliable operation. The straight forward approach to generate such pulses would be:
 ```c++
 ...
 digitalWriteFast(somePIN,HIGH)
@@ -13,29 +8,29 @@ delayMicroseconds(10)
 digitalWriteFast(somePIN,LOW)
 ...
 ```
-This is fine of course as long as you don't need high repetition rates. Lets assume that we want to operate a stepper motor at 1000rpm with a mircostep resolution of 1/32. If we assume 200 full steps per revolution this requires a pulse rate *r* of *r* = 200 * 32 * 800 / 60 = 85'333  steps per second. 
- 
-	
-What about place a determined space in the start of paragraph using the math environment as like:
+This is fine of course as long as you don't need high repetition rates. However, in real life situations the seemingly harmless delay of 10µs can generate quite some load on the processor. Lets assume that we want to use a Leadshine DM422 to drive a stepper motor at a speed of 1000 rpm with a mircostep resolution of 1/32. With the usual motor resulution of 200 full steps/rev we need a pulse rate *r* of
 
+&emsp;&emsp;&emsp;*r* = 200 * 32 * 1000 / 60 = 106'666  steps per second.
 
-<dl>
-  <dt>Definition list</dt>
-  <dd>Is something people use sometimes.</dd>
+Since the driver requires a pulse widht of 7.5µs this sums up to a processor load *l* of
 
-  <dt>Markdown in HTML</dt>
-  <dd>Does *not* work **very** well. Use HTML <em>tags</em>.</dd>
-</dl>
+&emsp;&emsp;&emsp; *l* = 106'666 steps/s * 7.5 µs/step = 80%.
 
+I.e, in this example the simple task of driving a stepper with 1000rpm would  keep your processor busy for **80%** of the time. 
 
+## Purpose of the Library
+This problem can easily be solved  by the usual procedure
+- Set the pin to HIGH
+- Start one of the timers (setting correct overflow value to generate the pulse)
+- Reset the pin in the interrupt service routine of the timer
+- Stop the timer
 
-TeensyDelay is an easy to use library providing up to eight indepenedent asynchronous delay channels. 
+**TeensyDelay** provides an easy to use interface to perform this task without requiring the user to fiddle around with interrupt programming. It does not waste one of the 'valuable' 32bit PIT timers but uses one of the hardly used FTM or TPM timers instead. It provides up to 8 independent delay channels. **TeensyDelay** is compatible to Teensy LC, Teensy 3.0, Teensy 3.1/3.2, Teensy 3.5 and Teensy 3.6. 
 
-For all [PJRC] Teensy AMR boards. I.e., Teensy LC, Teensy 3.0, Teensy 3.1/3.2, Teensy 3.5 and Teensy 3.6. Per default a delay from about 1µs up to about 50ms can be choosen independently for each channel. 
-
-The following code demonstrates the use of TeensyDelay. In loop() the LED is switched on every 500ms, TeensyDelay switches it off asynchronically after 25ms. 
+## Usage
+The following code demonstrates the use of TeensyDelay. In loop() we switch on the builtin LED, start on
+TeensyDelay switches it off asynchronically after 25ms. 
 ```c++
-#include <Arduino.h>
 #include "TeensyDelay.h"
 
 //Define a function which is called after the delay period has expired
