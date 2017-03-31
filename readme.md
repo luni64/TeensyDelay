@@ -1,7 +1,6 @@
 # TeensyDelay
 ## Problem to be solved 
 
-![Alt text](/media/timing.PNG?raw=true "Optional Title")
 
 Some external devices need rather long control pulses to operate correctly. Especially devices with opto-coupled control inputs like power stepper motor drivers can require pulse lengths in the 10µs range. Even a simple DRV8825 driver requires a pulse width of about 2-3µs for a reliable operation. The straight forward approach to generate such pulses would be:
 ```c++
@@ -64,8 +63,8 @@ void  loop()
 The library is optimized for speed (obviously, it wouldn't make much sense to use an interrupt driven pulse generation if the interrupt and trigger functions would eat up the same processor time as the simple delay in the first code block above)
 To anlayze the performance of the library I added code to set pin 0 to HIGH during the processor is in the interrupt service routine and pin 1 to HIGH during the trigger function. 
 The figure below
-![ddd](https://github.com/luni64/TeensyDelay/media/timing.PNG" Logo Title Text 1")
-![My image](media/timing.png)
+
+![Alt text](/media/timing.PNG?raw=true "Optional Title")
 
 
 [//]: ----------------------------------------
