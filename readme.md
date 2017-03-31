@@ -62,7 +62,7 @@ The library is optimized for speed (obviously, it wouldn't make much sense to us
 To anlayze the performance of the library I added code to set pin 0 to HIGH during the processor is in the interrupt service routine and pin 1 to HIGH during the trigger function. 
 The figure below
 ![ddd](https://github.com/luni64/TeensyDelay/media/timing.PNG" Logo Title Text 1")
-![My image](luni64.github.com/TeensyDelay/media/timing.png)
+![My image](media/timing.png)
 
 
 [//]: ----------------------------------------
