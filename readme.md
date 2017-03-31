@@ -1,5 +1,8 @@
 # TeensyDelay
 ## Problem to be solved 
+
+![Alt text](/media/timing.png?raw=true "Optional Title")
+
 Some external devices need rather long control pulses to operate correctly. Especially devices with opto-coupled control inputs like power stepper motor drivers can require pulse lengths in the 10µs range. Even a simple DRV8825 driver requires a pulse width of about 2-3µs for a reliable operation. The straight forward approach to generate such pulses would be:
 ```c++
 void pulse()
