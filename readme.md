@@ -61,11 +61,15 @@ void  loop()
 ```
 ## Performance
 The library is optimized for speed (obviously, it wouldn't make much sense to use an interrupt driven pulse generation if the interrupt and trigger functions would eat up the same processor time as the simple delay in the first code block above)
-To anlayze the performance of the library I added code to set pin 0 to HIGH during the processor is in the interrupt service routine and pin 1 to HIGH during the trigger function. 
-The figure below
 
-![Alt text](/media/timing.PNG?raw=true "Optional Title")
+To anlayze the performance of the library I added code to set pin 0 to HIGH during the processor is in the interrupt service routine and code to set pin 1 to HIGH during the trigger function. Delay time was set to 10µs. The measurement was done using a Teensy 3.6.
 
+
+![Alt text](/media/timing.PNG?raw=true "Logic analyzer trace")
+
+ The figure above shows that the time spent in the trigger function was about 0.25µs, the time spent in the interrupt service routine (including the callback) was about 0.38µs. In total we used 0.63µs to generate the 10µs pulse. For the stepper driver example calculated above we would now get a processor load of 
+ 
+ &emsp;&emsp;&emsp; *l* = 106'666 steps/s * 0.63 µs/step = 7%.
 
 [//]: ----------------------------------------
    [PJRC]: <https://www.pjrc.com/teensy/pinout.html>
