@@ -11,21 +11,21 @@ void pulse()
 	digitalWriteFast(somePIN,LOW);
 }
 ```
-This is fine of course as long as you don't need high repetition rates. However, in real life situations the seemingly harmless delay of 10µs can generate quite some load on the processor. Lets assume that we want to use a Leadshine DM422 to drive a stepper motor at a speed of 1000 rpm with a mircostep resolution of 1/32. With the usual motor resulution of 200 full steps/rev we need a pulse rate *r* of
+This is fine as long as you don't need high repetition rates. However, in real life situations the seemingly harmless delay of 10µs can generate quite some load on the processor. Lets assume that we want to use a Leadshine DM422 to drive a stepper motor at a speed of 1000 rpm with a mircostep resolution of 1/32. With the usual motor resolution of 200 full steps/rev we need a pulse rate *r* of
 
 &emsp;&emsp;&emsp;*r* = 200 * 32 * 1000 / 60 = 106'666  steps per second.
 
-Since the driver requires a pulse width of 7.5µs this sums up to a processor load *l* of
+Since the driver requires a pulse width of 7.5µs this sums up to a processor load of
 
-&emsp;&emsp;&emsp; *l* = 106'666 steps/s * 7.5 µs/step = 80%.
+&emsp;&emsp;&emsp; *load* = 106'666 steps/s * 7.5 µs/step = 80%.
 
 I.e, in this example the simple task of driving a stepper with 1000rpm would  keep your processor busy for **80%** of the time. 
 
 ## Purpose of the Library
 This problem can easily be solved  by the usual procedure
-- Set the pin to HIGH
-- Start one of the timers (setting correct overflow value to generate the pulse)
-- Reset the pin in the interrupt service routine of the timer
+- Set the step pin to HIGH
+- Calculate timer overflow value to generate the required delay and start timer
+- Reset the step pin during the timer interrupt service routine
 - Stop the timer
 
 **TeensyDelay** provides an easy to use interface to perform this task without requiring the user to fiddle around with interrupt programming. It does not waste one of the 'valuable' 32bit PIT timers but uses one of the hardly used FTM or TPM timers instead. It provides up to 8 independent delay channels. **TeensyDelay** is compatible to Teensy LC, Teensy 3.0, Teensy 3.1/3.2, Teensy 3.5 and Teensy 3.6. 
