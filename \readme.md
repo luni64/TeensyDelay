@@ -29,8 +29,11 @@ This problem can easily be solved  by the usual procedure
 **TeensyDelay** provides an easy to use interface to perform this task without requiring the user to fiddle around with interrupt programming. It does not waste one of the 'valuable' 32bit PIT timers but uses one of the hardly used FTM or TPM timers instead. It provides up to 8 independent delay channels. **TeensyDelay** is compatible to Teensy LC, Teensy 3.0, Teensy 3.1/3.2, Teensy 3.5 and Teensy 3.6. 
 
 ## Usage
-The following code demonstrates the use of TeensyDelay. In loop() we switch on the builtin LED, start on
-TeensyDelay switches it off asynchronically after 25ms. 
+###  Basic example
+The following code demonstrates the use of TeensyDelay.
+
+- **setup**: After initializing the library with the usual call to *begin*  we call *addChannel* to add a new delay channel and attach a callback function to it. 
+- **loop**; After switching on the builtin LED we start the delay channel by calling *TeensyDelay::trigger* with a delay time of 25ms. The trigger function will take care of setting up and starting the interrupt timer so that the callback function will be called after the chosen delay time. The callback function of this simple example does nothing more than switching off the LED.  
 ```c++
 #include "TeensyDelay.h"
 
@@ -42,21 +45,18 @@ void callback()
 
 void setup()
 {
-    TeensyDelay::begin();                   // setup timer
-    TeensyDelay::AddChannel(0,callback);    // add a delay channel and attach callback function
+    TeensyDelay::begin();                 // setup timer
+    TeensyDelay::addChannel(callback);    // add a delay channel and attach callback function
 }
 
 void  loop()
 {
-    digitalWriteFast(LED_BUILTIN,HIGH);     // switch on LED
-        TeensyDelay::Trigger(0, 25000);     // trigger the delay channel, callback will be invoked 25000µs after this call
+    digitalWriteFast(LED_BUILTIN,HIGH);   // switch on LED
+    TeensyDelay::trigger(25000);          // trigger the delay channel, callback will be invoked 25ms after this call
     
-    delay(250);                     
+    delay(1000);                     
 }
 ```
 
-
-
-[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
-
+[//]: ----------------------------------------
    [PJRC]: <https://www.pjrc.com/teensy/pinout.html>
