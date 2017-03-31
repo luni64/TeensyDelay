@@ -17,7 +17,7 @@ void setup()
 void loop() 
 {
     digitalWriteFast(LED_BUILTIN,HIGH);  // switch on LED
-    TeensyDelay::trigger(10000);         // the callback function will switch it of 10ms later
+    TeensyDelay::trigger(10000);         // the callback function will switch it off 10ms later
 
     delay(500);                          // repeat every 500ms
 }
