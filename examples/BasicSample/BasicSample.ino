@@ -1,6 +1,6 @@
 #include <TeensyDelay.h>
 
-//This function will be called after the delay period.
+//This callback function will be called after the delay period
 void callback()
 {
   digitalWriteFast(LED_BUILTIN,LOW);
@@ -11,13 +11,13 @@ void setup()
   pinMode(LED_BUILTIN,OUTPUT);
 
   TeensyDelay::begin();
-  TeensyDelay::addDelayChannel(callback);
+  TeensyDelay::addDelayChannel(callback); // setup a delay channel and attach the callback function to it
 }
 
 void loop() 
 {
     digitalWriteFast(LED_BUILTIN,HIGH);  // switch on LED
-    TeensyDelay::trigger(20);            // the callback function will switch it of 20µs later
+    TeensyDelay::trigger(10000);         // the callback function will switch it of 10ms later
 
-    delay(1);                            // repeat every millsecond
+    delay(500);                          // repeat every 500ms
 }
