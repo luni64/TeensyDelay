@@ -6,24 +6,21 @@ namespace TeensyDelay
 
     void begin()
     {
-        if (USE_TIMER == TIMER_TPM1)                 // enable clocks for tpm timers (ftm clocks are enabled by teensyduino)
-        {
+        if (USE_TIMER == TIMER_TPM1){                // enable clocks for tpm timers (ftm clocks are enabled by teensyduino)        
             SIM_SCGC2 |= SIM_SCGC2_TPM1;
             SIM_SOPT2 |= SIM_SOPT2_TPMSRC(2);
         }
-        else if (USE_TIMER == TIMER_TPM2)
-        {
+        else if (USE_TIMER == TIMER_TPM2){
             SIM_SCGC2 |= SIM_SCGC2_TPM2;
             SIM_SOPT2 |= SIM_SOPT2_TPMSRC(2);
         }
-
+        
         //Default Mode for  FTM is (nearly) TPM compatibile 
         timer->SC = FTM_SC_CLKS(0b00);              // Disable clock		        
-        timer->MOD = 0xFFFF;                        // Full counter range
+        timer->MOD = 0xFFFF;                        // SEt full counter range
 
-        for (unsigned i = 0; i < maxChannel; i++)
-        {                                           // (teensyduino enabled them for PMW generation)
-            if (isFTM) {
+        for (unsigned i = 0; i < maxChannel; i++){  // turn off all channels which were enabled by teensyduino for PWM generation                                                   
+            if (isFTM) {                            // compiletime constant, compiler optimizes conditional and not valid branch completely away           
                 timer->CH[i].SC &= ~FTM_CSC_CHF;    // FTM requires to clear flag by setting bit to 0    
             }
             else {
@@ -32,7 +29,6 @@ namespace TeensyDelay
             timer->CH[i].SC &= ~FTM_CSC_CHIE;       // Disable channel interupt
             timer->CH[i].SC = 0;                    // disable channel
         }
-
         timer->SC = FTM_SC_CLKS(0b01) | FTM_SC_PS(prescale);  // Start clock
         NVIC_ENABLE_IRQ(irq);                        // Enable interrupt request for selected timer
     }
@@ -72,18 +68,16 @@ void tpm2_isr(void)
     uint32_t status = TeensyDelay::timer->STATUS & 0x0F;   // STATUS collects all channel event flags (bit0 = ch0, bit1 = ch1....) 
 
     unsigned i = 0;
-    while (status > 0)
-    {        
-        if (status & 0x01)
-        {
-            if (isFTM){                                                        
+    while (status > 0){        
+        if (status & 0x01){
+            if (isFTM){                                             // compiletime constant, compiler optimizes conditional and not valid branch completely away           
                 timer->CH[i].SC &= ~(FTM_CSC_CHF | FTM_CSC_CHIE);   // reset channel and interrupt enable (we only want one shot per trigger)
             }
             else{
-                timer->CH[i].SC |= FTM_CSC_CHF;
+                timer->CH[i].SC |= FTM_CSC_CHF;                     // TPM needs inverse setting of the flags
                 timer->CH[i].SC &= ~FTM_CSC_CHIE;
             }       
-            TeensyDelay::callbacks[i]();						    // invoke callback function for the channel								                     
+            TeensyDelay::callbacks[i]();				            // invoke callback function for the channel								                     
         }       
         i++;
         status >>= 1;
