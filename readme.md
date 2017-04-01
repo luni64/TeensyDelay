@@ -75,8 +75,7 @@ To anlayze the performance of the library I added code to set pin 0 HIGH during 
  instead of the 80% using the simple delay. 
  
  ## Further information 
- For further information please have a look at the code in the provided examples. 
+ For further information please have a look at the code in the provided examples..
 
 [//]: ----------------------------------------
    [PJRC]: <https://www.pjrc.com/teensy/pinout.html>
-
