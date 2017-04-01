@@ -22,7 +22,7 @@ Since the driver requires a pulse width of 7.5µs this sums up to a processor lo
 I.e, in this example the simple task of driving a stepper with 1000rpm would  keep your processor busy for **80%** of the time. 
 
 ## Purpose of the Library
-This problem can easily be solved  by the using a timer interrupt to generate the pulse:
+This problem can easily be solved  by using a timer interrupt to generate the pulse:
 - Set the pulse pin to HIGH
 - Calculate timer overflow value to generate the required delay 
 - Start timer with calculated overflow value
