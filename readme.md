@@ -22,11 +22,11 @@ Since the driver requires a pulse width of 7.5µs this sums up to a processor lo
 I.e, in this example the simple task of driving a stepper with 1000rpm would  keep your processor busy for **80%** of the time. 
 
 ## Purpose of the Library
-This problem can easily be solved  by the usual procedure
-- Set the step pin to HIGH
+This problem can easily be solved  by the using a timer interrupt to generate the pulse:
+- Set the pulse pin to HIGH
 - Calculate timer overflow value to generate the required delay 
-- Start timer
-- Reset the step pin during the timer interrupt service routine
+- Start timer with calculated overflow value
+- Reset the pulse pin in the timer interrupt service routine
 - Stop the timer
 
 **TeensyDelay** provides an easy to use interface to perform this task without requiring the user to fiddle around with interrupt programming. Additionally it does not waste any of the 'valuable' 32bit PIT timers but uses one of the hardly used FTM or TPM timers instead (selectable). Depending on the chosen timer it provides up to 8 independent delay channels. **TeensyDelay** is compatible to T Teensy 3.0, Teensy 3.1/3.2, Teensy 3.5 and Teensy 3.6. Compatibility to Teensy LC will be added later.
