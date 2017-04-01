@@ -77,9 +77,9 @@ For performance reasons of the trigger function I recommend to use compile time 
 
 
 ## Performance
-The library is optimized for speed. Obviously, it wouldn't make much sense to use an interrupt driven pulse generation if the interrupt and trigger functions would eat up the same processor time as the simple delay in the first code block above.
+The library is optimized for speed. Obviously, it wouldn't make much sense to use interrupt driven pulse generation if the interrupt and trigger functions would eat up the same processor time as the simple delay in the first code block above.
 
-To anlayze the performance of the library I added code to set pin 0 HIGH during the the trigger function and code to set pin 1 HIGH during the interrupt service routine. Trigger delay was set to 10µs. The shown measurement was done using a Teensy 3.6.
+To anlayze the performance of the library I added code to set pin 0 HIGH during the the trigger function and code to set pin 1 HIGH during the interrupt service routine. Trigger delay was set to 10µs. The shown measurement was done using a Teensy 3.6 @240MHz. 
 
 
 ![Alt text](/media/timing.PNG?raw=true "Logic analyzer trace")
