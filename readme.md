@@ -104,7 +104,7 @@ Depending on the board type **TeensyDelay** can work with any of the timers show
 |TPM 1 |2       |    |    |    |    | X  |
 |TPM 2 |2       |    |    |    |    | X  |
 
-To change the timer you want to use please edit line 22 in the file config.h according to the description given in the file. 
+If you want to change the timer used by **TeensyDelay**  please edit line 22 in the file config.h according to the description given in the file. 
 
  ## Further information 
  For further information please have a look at the code in the provided examples and the source files. 
