@@ -66,14 +66,14 @@ Depending on the chosen timer **TeensyDelay** handles up to eight independent de
 ```c++
 	constexpr int ch_A = 6;
 	...
-	TeensyDelay::addChannel(firstCallback,ch_A);    // Setup channel #6
-	TeensyDelay::addChannel(anotherCallback,2);   // Setup channel #2
+	TeensyDelay::addChannel(firstCallback, ch_A);  // Setup channel #6
+	TeensyDelay::addChannel(anotherCallback, 2);   // Setup channel #2
 	...
-	TeensyDelay::trigger(25,2);                   // Trigger channel #2, 25µs
-	TeensyDelay::trigger(20000,ch_A);                    //Trigger channel #6, 20ms
+	TeensyDelay::trigger(25, 2);                   // Trigger channel #2, 25µs
+	TeensyDelay::trigger(20000, ch_A);             //Trigger channel #6, 20ms
 	....
 ```
-For performance reasons of the trigger function I recommend to use compile time constants (integer literals, constexpr int or #define) for the channel number (see code above for an example).
+For performance reasons of the trigger function I recommend to use compile time constants (integer literals, constexpr int or #define) for the channel number (see code above for an example). 
 
 
 ## Performance
@@ -90,6 +90,20 @@ To anlayze the performance of the library I added code to set pin 0 HIGH during 
  
  instead of the 80% using the simple delay. 
  
+## Configuration
+
+Depending on the board type **TeensyDelay** can work with any of the timers shown in the table below.  Timers marked with X are available for the given board. The default timer used by **TeensyDelay** for a given board is marked with D. 
+
+|TIMER |Channels|T3.0|T3.1|T3.2|T3.5|T3.6|                
+|------|:------:|:--:|:--:|:--:|:--:|:--:|
+|FTM 0 |8       | D  | D  | D  | D  | D  |
+|FTM 1 |2       | X  | X  | X  | X  | X  |
+|FTM 2 |2       |    | X  | X  | X  | X  |
+|FTM 3 |8       |    |    |    | X  | X  |
+|TPM 0 |6       |    |    |    |    |    |
+|TPM 1 |2       |    |    |    |    | X  |
+|TPM 2 |2       |    |    |    |    | X  |
+
  ## Further information 
  For further information please have a look at the code in the provided examples.
 
