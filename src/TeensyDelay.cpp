@@ -76,17 +76,14 @@ void tpm2_isr(void)
     {        
         if (status & 0x01)
         {
-            if (isFTM)
-            {                                                        
+            if (isFTM){                                                        
                 timer->CH[i].SC &= ~(FTM_CSC_CHF | FTM_CSC_CHIE);   // reset channel and interrupt enable (we only want one shot per trigger)
             }
-            else
-            {
+            else{
                 timer->CH[i].SC |= FTM_CSC_CHF;
                 timer->CH[i].SC &= ~FTM_CSC_CHIE;
-            }
-       
-            TeensyDelay::callbacks[i]();							         // invoke callback function for the channel								                     
+            }       
+            TeensyDelay::callbacks[i]();						    // invoke callback function for the channel								                     
         }       
         i++;
         status >>= 1;
