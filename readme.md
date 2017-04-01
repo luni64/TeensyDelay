@@ -84,7 +84,7 @@ To anlayze the performance of the library I added code to set pin 0 HIGH during 
 
 ![Alt text](/media/timing.PNG?raw=true "Logic analyzer trace")
 
- The figure above shows that the time spent in the trigger function was about 0.25µs, the time spent in the interrupt service routine (including the callback) was about 0.38µs. In total we used 0.63µs to generate the 10µs pulse. For the stepper driver example calculated above we would now get a processor load of 
+The figure above shows that the time spent in the trigger function was about 0.25µs, the time spent in the interrupt service routine (including the callback) was about 0.38µs. In total we used 0.63µs to generate the 10µs pulse. For the stepper driver example calculated above we would now get a processor load of 
  
  &emsp;&emsp;&emsp; *load* = 106'666 steps/s * 0.63 µs/step = 7%.
  
@@ -92,7 +92,7 @@ To anlayze the performance of the library I added code to set pin 0 HIGH during 
  
 ## Configuration
 
-Depending on the board type **TeensyDelay** can work with any of the timers shown in the table below.  Timers marked with X are available for the given board. The default timer used by **TeensyDelay** for a given board is marked with D. 
+Depending on the board type **TeensyDelay** can work with any of the timers shown in the table below.  All timers marked with X are available for the given board. The default timer used by **TeensyDelay**  is marked with D. 
 
 |TIMER |Channels|T3.0|T3.1|T3.2|T3.5|T3.6|                
 |------|:------:|:--:|:--:|:--:|:--:|:--:|
@@ -104,8 +104,10 @@ Depending on the board type **TeensyDelay** can work with any of the timers show
 |TPM 1 |2       |    |    |    |    | X  |
 |TPM 2 |2       |    |    |    |    | X  |
 
+To change the timer you want to use please edit line 22 in the file config.h according to the description given in the file. 
+
  ## Further information 
- For further information please have a look at the code in the provided examples.
+ For further information please have a look at the code in the provided examples and the source files. 
 
 [//]: ----------------------------------------
    [PJRC]: <https://www.pjrc.com/teensy/pinout.html>
