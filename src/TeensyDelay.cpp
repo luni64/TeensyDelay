@@ -1,10 +1,8 @@
 #include "config.h"
 
-
 namespace TeensyDelay
 {
     void(*callbacks[maxChannel])(void);
-
 
     void begin()
     {
@@ -36,15 +34,13 @@ namespace TeensyDelay
         }
 
         timer->SC = FTM_SC_CLKS(0b01) | FTM_SC_PS(prescale);  // Start clock
-
         NVIC_ENABLE_IRQ(irq);                        // Enable interrupt request for selected timer
     }
 
     void addDelayChannel(void(*callback)(void), const int channel = 0)
-    {
+    {     
         callbacks[channel] = callback;               //Just store the callback function, the rest is done in Trigger function
     }
-
 }
 
 //-------------------------------------------------------------------------------------------
