@@ -60,6 +60,22 @@ void  loop()
     delay(1000);                     
 }
 ```
+###  Using more than one delay channel
+Depending on the chosen timer **TeensyDelay** handles up to eight independent delay channels. Per default **TeensyDelay** uses the first channel of the selected timer. If you need more than one channel the *addChannel* function and the *trigger* function accept an optional parameter to choose one of the channels. 
+
+```c++
+	constexpr int ch_A = 6;
+	...
+	TeensyDelay::addChannel(firstCallback,ch_A);    // Setup channel #6
+	TeensyDelay::addChannel(anotherCallback,2);   // Setup channel #2
+	...
+	TeensyDelay::trigger(25,2);                   // Trigger channel #2, 25µs
+	TeensyDelay::trigger(20000,ch_A);                    //Trigger channel #6, 20ms
+	....
+```
+For performance reasons of the trigger function I recommend to use compile time constants (integer literals, constexpr int or #define) for the channel number (see code above for an example).
+
+
 ## Performance
 The library is optimized for speed. Obviously, it wouldn't make much sense to use an interrupt driven pulse generation if the interrupt and trigger functions would eat up the same processor time as the simple delay in the first code block above.
 
@@ -75,7 +91,7 @@ To anlayze the performance of the library I added code to set pin 0 HIGH during 
  instead of the 80% using the simple delay. 
  
  ## Further information 
- For further information please have a look at the code in the provided examples..
+ For further information please have a look at the code in the provided examples.
 
 [//]: ----------------------------------------
    [PJRC]: <https://www.pjrc.com/teensy/pinout.html>
