@@ -1,5 +1,5 @@
 # TeensyDelay
-## Problem to be solved 
+## Problem to be Solved 
 
 
 Some external devices need rather long control pulses to operate correctly. Especially devices with opto-coupled control inputs like power stepper motor drivers can require pulse lengths in the 10µs range. Even a simple DRV8825 driver requires a pulse width of about 2-3µs for a reliable operation. The straight forward approach to generate such pulses would be:
@@ -34,7 +34,7 @@ This problem can easily be solved  by using a timer interrupt to generate the pu
 (The library [TeensyStep](https://github.com/luni64/TeensyStep) - an efficient stepper motor library- uses **TeensyDelay** for resetting the STEP signals of the driven motors and for generating a periodic interrupt for recalculation of acceleration parameters.)
 
 ## Usage
-###  Basic example
+###  Basic Example
 The following code demonstrates the use of TeensyDelay.
 
 - **setup**: After initializing the library with the usual call to *begin*  we call *addChannel* to add a new delay channel and attach a callback function to it. 
@@ -62,7 +62,7 @@ void  loop()
     delay(1000);                     
 }
 ```
-###  Using more than one delay channel
+###  Using more than one Delay Channel
 Depending on the chosen timer **TeensyDelay** handles up to eight independent delay channels. Per default **TeensyDelay** uses the first channel of the selected timer. If you need more than one channel the *addChannel* function and the *trigger* function accept an optional parameter to choose one of the channels. 
 
 ```c++
@@ -77,7 +77,7 @@ Depending on the chosen timer **TeensyDelay** handles up to eight independent de
 ```
 For performance reasons of the trigger function I recommend to use compile time constants (integer literals, constexpr int or #define) for the channel number (see code above for an example). 
 
-### A Poor Man's periodic timer
+### A Poor Man's Periodic Timer
 TeensyDelay was designed for calling a callback function some time after the channel was triggered. However, nothing speaks against triggering a channel within its own callback function. In fact, that is a quick and easy solution if you need a simple periodic timer and don't want to spend one of the IntervalTimers for it. 
 ```c++	
 	void periodicCallback()
