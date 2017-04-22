@@ -77,19 +77,20 @@ Depending on the chosen timer **TeensyDelay** handles up to eight independent de
 ```
 For performance reasons of the trigger function I recommend to use compile time constants (integer literals, constexpr int or #define) for the channel number (see code above for an example). 
 
-### Generating periodic interrupts
+### A Poor Man's periodic timer
 TeensyDelay was designed for calling a callback function some time after the channel was triggered. However, nothing speaks against triggering a channel within its own callback function. In fact, that is a quick and easy solution if you need a simple periodic timer and don't want to spend one of the IntervalTimers for it. 
 ```c++	
 	void periodicCallback()
 	{
 	   trigger(10000);  // retrigger the channel (10ms)
-	   doSomething()
+	   doSomething();
 	}
 	
 	void setup()
 	{
 	   TeensyDelay::addChannel(periodicCallback);
-	   TeensyDelay::trigger(1);  // start the periodic timer immediately (required only once) 
+	   TeensyDelay::trigger(300);  // start the periodic timer in 300µs
+	   ...
 	}
 	...
 ```
