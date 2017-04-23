@@ -99,7 +99,7 @@ namespace TeensyDelay
         uint32_t QDCTRL;
         uint32_t CONF;
         uint32_t FLTPOL;
-        uint32_t SYNCONF;
+        uint32_t SYNCONF; 
         uint32_t INVCTRL;
         uint32_t SWOCTRL;
         uint32_t PWMLOAD;
@@ -139,7 +139,7 @@ namespace TeensyDelay
         2,  // TPM2 
     };
 
-    constexpr uin32_t timerAddr = TimerBaseAddr[(int)board][selTimer];
+    constexpr uint32_t timerAddr = TimerBaseAddr[(int)board][selTimer];
     constexpr volatile FTM_t* timer = __builtin_constant_p((FTM_t*)timerAddr)? (FTM_t*)timerAddr: (FTM_t*)timerAddr; // base address for register block of selected timer
     
    // constexpr volatile FTM_t* timer = (FTM_t*)TimerBaseAddr[(int)board][selTimer]; // base address for register block of selected timer
