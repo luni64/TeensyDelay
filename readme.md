@@ -37,7 +37,7 @@ This problem can easily be solved  by using a timer interrupt to generate the pu
 ###  Basic Example
 The following code demonstrates the use of TeensyDelay.
 
-- **setup**: After initializing the library with the usual call to *begin*  we call *addChannel* to add a new delay channel and attach a callback function to it. 
+- **setup**: After initializing the library with the usual call to *begin*  we call *addDelayChannel* to add a new delay channel and attach a callback function to it. 
 - **loop**; After switching on the builtin LED we start the delay channel by calling *TeensyDelay::trigger* with a delay time of 25ms. The trigger function will take care of setting up and starting the interrupt timer so that the callback function will be called after the chosen delay time. The callback function in this simple example does nothing more than switching off the LED.  
 ```c++
 #include "TeensyDelay.h"
@@ -51,7 +51,7 @@ void callback()
 void setup()
 {
     TeensyDelay::begin();                 // setup timer
-    TeensyDelay::addChannel(callback);    // add a delay channel and attach callback function
+    TeensyDelay::addDelayChannel(callback);    // add a delay channel and attach callback function
 }
 
 void  loop()
@@ -68,8 +68,8 @@ Depending on the chosen timer **TeensyDelay** handles up to eight independent de
 ```c++
 	constexpr int ch_A = 6;
 	...
-	TeensyDelay::addChannel(firstCallback, ch_A);  // Setup channel #6
-	TeensyDelay::addChannel(anotherCallback, 2);   // Setup channel #2
+	TeensyDelay::addDelayChannel(firstCallback, ch_A);  // Setup channel #6
+	TeensyDelay::addDelayChannel(anotherCallback, 2);   // Setup channel #2
 	...
 	TeensyDelay::trigger(25, 2);                   // Trigger channel #2, 25µs
 	TeensyDelay::trigger(20000, ch_A);             //Trigger channel #6, 20ms
@@ -88,7 +88,7 @@ TeensyDelay was designed for calling a callback function some time after the cha
 	
 	void setup()
 	{
-	   TeensyDelay::addChannel(periodicCallback);
+	   TeensyDelay::addDelayChannel(periodicCallback);
 	   TeensyDelay::trigger(300);  // start the periodic timer in 300µs
 	   ...
 	}
