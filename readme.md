@@ -63,7 +63,7 @@ void  loop()
 }
 ```
 ###  Using more than one Delay Channel
-Depending on the chosen timer **TeensyDelay** handles up to eight independent delay channels. Per default **TeensyDelay** uses the first channel of the selected timer. If you need more than one channel the *addChannel* function and the *trigger* function accept an optional parameter to choose one of the channels. 
+Depending on the chosen timer **TeensyDelay** handles up to eight independent delay channels. Per default **TeensyDelay** uses the first channel of the selected timer. If you need more than one channel the *addDelayChannel* function and the *trigger* function accept an optional parameter to choose one of the channels. 
 
 ```c++
 	constexpr int ch_A = 6;
