@@ -5,7 +5,7 @@
 namespace TeensyDelay
 {
     extern void begin(void);  
-    extern void addDelayChannel(void(*_callback)(void), const int nr = 0);
+    extern unsigned addDelayChannel(void(*_callback)(void), const int nr = -1);
 
     inline void trigger(const float delay, const int channel = 0)
     {
