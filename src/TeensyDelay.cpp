@@ -70,7 +70,7 @@ void tpm1_isr(void)
 void tpm2_isr(void)
 #endif
 {
-    uint32_t status = timer->STATUS & 0x0F;        // STATUS collects all channel event flags (bit0 = ch0, bit1 = ch1....) 
+    uint32_t status = timer->STATUS & 0x0FF;       // STATUS collects all channel event flags (bit0 = ch0, bit1 = ch1....) 
 
     unsigned i = 0;
     while (status > 0) {
