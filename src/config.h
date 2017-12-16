@@ -32,6 +32,7 @@ constexpr int prescaleDefault = -1;
 
 #include <kinetis.h>
 #include <core_pins.h>
+#include <algorithm>
 
 namespace TeensyDelay
 {
@@ -172,6 +173,6 @@ namespace TeensyDelay
     // this will be completely evaluated by the compiler as long as mu is known at compile time 
     constexpr int microsToReload(const float mu)
     {
-        return  mu * 1E-6 * _timer_frequency / (1 << prescale) + 0.5;
+        return std::max(1,(int)( mu * 1E-6 * _timer_frequency / (1 << prescale) + 0.5));
     }
 }
