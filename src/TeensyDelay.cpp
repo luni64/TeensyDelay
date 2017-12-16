@@ -1,46 +1,48 @@
 #include "TeensyDelay.h" 
 #include "config.h"
 
+#include "usb_serial.h"
+
 namespace TeensyDelay
 {
     void(*callbacks[maxChannel])(void);
-	unsigned lastChannel = 0;
+    unsigned lastChannel = 0;
 
-	void begin()
-	{
-		if (USE_TIMER == TIMER_TPM1) {                // enable clocks for tpm timers (ftm clocks are enabled by teensyduino)        
-			SIM_SCGC2 |= SIM_SCGC2_TPM1;
-			SIM_SOPT2 |= SIM_SOPT2_TPMSRC(2);
-		}
-		else if (USE_TIMER == TIMER_TPM2) {
-			SIM_SCGC2 |= SIM_SCGC2_TPM2;
-			SIM_SOPT2 |= SIM_SOPT2_TPMSRC(2);
-		}
+    void begin()
+    {
+        if (USE_TIMER == TIMER_TPM1) {                // enable clocks for tpm timers (ftm clocks are enabled by teensyduino)        
+            SIM_SCGC2 |= SIM_SCGC2_TPM1;
+            SIM_SOPT2 |= SIM_SOPT2_TPMSRC(2);
+        }
+        else if (USE_TIMER == TIMER_TPM2) {
+            SIM_SCGC2 |= SIM_SCGC2_TPM2;
+            SIM_SOPT2 |= SIM_SOPT2_TPMSRC(2);
+        }
 
-		//Default Mode for  FTM is (nearly) TPM compatibile 
-		timer->SC = FTM_SC_CLKS(0b00);              // Disable clock		        
-		timer->MOD = 0xFFFF;                        // Set full counter range
+        //Default Mode for  FTM is (nearly) TPM compatibile 
+        timer->SC = FTM_SC_CLKS(0b00);              // Disable clock		        
+        timer->MOD = 0xFFFF;                        // Set full counter range
 
-		for (unsigned i = 0; i < maxChannel; i++) { // turn off all channels which were enabled by teensyduino for PWM generation                                                   
-			if (isFTM) {                            // compiletime constant, compiler optimizes conditional and not valid branch completely away           
-				timer->CH[i].SC &= ~FTM_CSC_CHF;    // FTM requires to clear flag by setting bit to 0    
-			}
-			else {
-				timer->CH[i].SC |= FTM_CSC_CHF;     // TPM requires to clear flag by setting bit to 1
-			}
-			timer->CH[i].SC &= ~FTM_CSC_CHIE;       // Disable channel interupt
-            timer->CH[i].SC = FTM_CSC_MSA;			
-		}
-		timer->SC = FTM_SC_CLKS(0b01) | FTM_SC_PS(prescale);  // Start clock
-		NVIC_ENABLE_IRQ(irq);                       // Enable interrupt request for selected timer
-	}
+        for (unsigned i = 0; i < maxChannel; i++) { // turn off all channels which were enabled by teensyduino for PWM generation                                                   
+            if (isFTM) {                            // compiletime constant, compiler optimizes conditional and not valid branch completely away           
+                timer->CH[i].SC &= ~FTM_CSC_CHF;    // FTM requires to clear flag by setting bit to 0    
+            }
+            else {
+                timer->CH[i].SC |= FTM_CSC_CHF;     // TPM requires to clear flag by setting bit to 1
+            }
+            timer->CH[i].SC &= ~FTM_CSC_CHIE;       // Disable channel interupt
+            timer->CH[i].SC = FTM_CSC_MSA;
+        }
+        timer->SC = FTM_SC_CLKS(0b01) | FTM_SC_PS(prescale);  // Start clock
+        NVIC_ENABLE_IRQ(irq);                       // Enable interrupt request for selected timer
+    }
 
-	unsigned addDelayChannel(void(*callback)(void), const int channel)
-	{
+    unsigned addDelayChannel(void(*callback)(void), const int channel)
+    {
         unsigned ch = channel < 0 ? lastChannel++ : channel;
         callbacks[ch] = callback;               //Just store the callback function, the rest is done in Trigger function
         return ch;
-	}
+    }
 
 }
 
@@ -70,10 +72,36 @@ void tpm1_isr(void)
 void tpm2_isr(void)
 #endif
 {
+    for (unsigned i = 0; i < maxChannel; i++)
+    {        
+        if ((timer->CH[i].SC & (FTM_CSC_CHIE | FTM_CSC_CHF)) == (FTM_CSC_CHIE | FTM_CSC_CHF))
+        {
+            if (isFTM)
+            {
+                timer->CH[i].SC &= ~(FTM_CSC_CHIE | FTM_CSC_CHF);
+            }
+            else
+            {
+                timer->CH[i].SC &= ~FTM_CSC_CHIE;
+                timer->CH[i].SC |= FTM_CSC_CHF;
+            }
+
+
+            callbacks[i]();				       // invoke callback function for the channel		
+        }
+
+
+    }
+
+    return;
+
     uint32_t status = timer->STATUS & 0x0FF;       // STATUS collects all channel event flags (bit0 = ch0, bit1 = ch1....) 
 
+    Serial.printf("%02X\n", status);
     unsigned i = 0;
     while (status > 0) {
+
+
         if (status & 0x01) {
             if (isFTM) {                           // isFTM is a compiletime constant, compiler optimizes conditional and not valid branch completely away           
                 timer->CH[i].SC &= ~FTM_CSC_CHF;   // reset channel and interrupt enable (we only want one shot per trigger)	
