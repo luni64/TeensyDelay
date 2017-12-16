@@ -73,50 +73,11 @@ void tpm2_isr(void)
 #endif
 {
     for (unsigned i = 0; i < maxChannel; i++)
-    {        
-        if ((timer->CH[i].SC & (FTM_CSC_CHIE | FTM_CSC_CHF)) == (FTM_CSC_CHIE | FTM_CSC_CHF))
+    {
+        if ((timer->CH[i].SC & (FTM_CSC_CHIE | FTM_CSC_CHF)) == (FTM_CSC_CHIE | FTM_CSC_CHF)) // only handle if channel is active (CHIE set) and overflowed (CHF set)
         {
-            if (isFTM)
-            {
-                timer->CH[i].SC &= ~(FTM_CSC_CHIE | FTM_CSC_CHF);
-            }
-            else
-            {
-                timer->CH[i].SC &= ~FTM_CSC_CHIE;
-                timer->CH[i].SC |= FTM_CSC_CHF;
-            }
-
-
+            timer->CH[i].SC &= ~FTM_CSC_CHIE;  // We want one shot only. (Make sure to reset the CHF flag before re-activating interrupt in trigger function)
             callbacks[i]();				       // invoke callback function for the channel		
         }
-
-
-    }
-
-    return;
-
-    uint32_t status = timer->STATUS & 0x0FF;       // STATUS collects all channel event flags (bit0 = ch0, bit1 = ch1....) 
-
-    Serial.printf("%02X\n", status);
-    unsigned i = 0;
-    while (status > 0) {
-
-
-        if (status & 0x01) {
-            if (isFTM) {                           // isFTM is a compiletime constant, compiler optimizes conditional and not valid branch completely away           
-                timer->CH[i].SC &= ~FTM_CSC_CHF;   // reset channel and interrupt enable (we only want one shot per trigger)	
-            }
-            else {
-                timer->CH[i].SC |= FTM_CSC_CHF;    // TPM needs inverse setting of the flags                
-            }
-
-            if (timer->CH[i].SC & FTM_CSC_CHIE)    // Channel flags will be set each time the counter overflows the channel value. 
-            {									   // In case that the interupt was triggered by another channel we need to prevent
-                timer->CH[i].SC &= ~FTM_CSC_CHIE;  // the callback if this channel was not triggerd (CHIE of this channel not set)
-                callbacks[i]();				       // invoke callback function for the channel								                     
-            }
-        }
-        i++;
-        status >>= 1;
     }
 }
