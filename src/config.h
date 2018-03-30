@@ -21,7 +21,8 @@
 // If you need a special timer, please replace "TIMER_DEFAULT" by a timer from the list above
 #define USE_TIMER TIMER_DEFAULT
 
-
+// change to a value from 0..7 to override autmatic calculation of the prescale value
+constexpr int prescaleDefault = -1;
 
 //==========================================================================
 // Nothing to be changed below here 
@@ -31,6 +32,7 @@
 
 #include <kinetis.h>
 #include <core_pins.h>
+#include <algorithm>
 
 namespace TeensyDelay
 {
@@ -152,10 +154,14 @@ namespace TeensyDelay
     //-----------------------------------------------------------------------------------
     //Frequency dependent settings 
 
+    static_assert(prescaleDefault >= -1 && prescaleDefault <= 7, "Please select a prescale value between 0 and 7 or set to -1 for automatic");
+
     constexpr unsigned _timer_frequency = isFTM ? F_BUS : 16000000;  // FTM timers are clocked with F_BUS, the TPM timers are clocked with OSCERCLK (16MHz for all teensies)
 
     // Choose prescaler such that one timer cycle corresponds to about 1µs
-    constexpr unsigned prescale = _timer_frequency > 120000000 ? 0b111 :
+    constexpr unsigned prescale = 
+        prescaleDefault >= 0 ? (unsigned) prescaleDefault : 
+        _timer_frequency > 120000000 ? 0b111 :
         _timer_frequency > 60000000 ? 0b110 :
         _timer_frequency > 30000000 ? 0b101 :
         _timer_frequency > 15000000 ? 0b100 :
@@ -167,6 +173,6 @@ namespace TeensyDelay
     // this will be completely evaluated by the compiler as long as mu is known at compile time 
     constexpr int microsToReload(const float mu)
     {
-        return  mu * 1E-6 * _timer_frequency / (1 << prescale) + 0.5;
+        return std::max(1,(int)( mu * 1E-6 * _timer_frequency / (1 << prescale) + 0.5));
     }
 }
