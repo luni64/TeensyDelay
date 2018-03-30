@@ -29,7 +29,8 @@ This problem can easily be solved  by using a timer interrupt to generate the pu
 - Reset the pulse pin in the timer interrupt service routine
 - Stop the timer
 
-**TeensyDelay** provides an easy to use interface to perform this task without requiring the user to fiddle around with interrupt programming. Additionally it does not waste any of the 'valuable' 32bit PIT timers but uses one of the hardly used FTM or TPM timers instead (selectable). Depending on the chosen timer it provides up to 8 independent delay channels. **TeensyDelay** is compatible to T Teensy 3.0, Teensy 3.1/3.2, Teensy 3.5 and Teensy 3.6. Compatibility to Teensy LC will be added later.
+**TeensyDelay** provides an easy to use interface to perform this task without requiring the user to fiddle around with interrupt programming. Additionally it does not waste any of the 'valuable' 32bit PIT timers but uses one of the hardly used FTM or TPM timers instead (selectable). Depending on the chosen timer it provides up to 8 independent delay channels. Depending on the selected timer module (see chapter Configuration below) and the processor frequency, the maximum delay time is limited to about 30ms. 
+**TeensyDelay** is compatible to T Teensy 3.0, Teensy 3.1/3.2, Teensy 3.5 and Teensy 3.6. Compatibility to Teensy LC will be added later.
 
 (The library [TeensyStep](https://github.com/luni64/TeensyStep) - an efficient stepper motor library- uses **TeensyDelay** for resetting the STEP signals of the driven motors and for generating a periodic interrupt for recalculation of acceleration parameters.)
 
