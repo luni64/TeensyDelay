@@ -95,7 +95,7 @@ TeensyDelay was designed for calling a callback function some time after the cha
 	}
 	...
 ```
-## Long Delays
+### Long Delays
 Internally TeensyDelay uses one of the FTM or TPM timer modules of the processor. The code in config.h tries to calculate the timer prescaler such that one timer tick corresponds to about 1µs. Since the timer registers of the FTM or TPM modules are only 16bit wide the  delay time is limited to about 65ms. In case you need longer delays the following snippet shows how to achieve five seconds by choosing a base delay of 25ms and retriggering the timer from within the callback function:
 ```c++	
 void callback(){
