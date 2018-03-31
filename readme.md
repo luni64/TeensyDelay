@@ -110,6 +110,32 @@ The figure above shows that the time spent in the trigger function was about 0.2
  
  instead of the 80% using the simple delay. 
  
+## Long Delays
+Internally TeensyDelay uses one of the FTM or TPM timer modules of the processor. The code in config.h tries to calculate the timer prescaler such that one timer tick corresponds to about 1µs. Since the timer registers of the FTM or TPM modules are only 16bit wide the  delay time is limited to about 65ms. In case you need longer delays the following snippet shows how to achieve five seconds by choosing a base delay of 25ms and retriggering the timer from within the callback function:
+```c++	
+void callback(){
+    static int cnt = 0;
+    if (cnt < 200){                    // ignore 200 trigger events (5s = 200 x 25ms)
+        cnt++;
+        TeensyDelay::trigger(25000);   // retrigger the timer (25ms)
+    }
+    else{                              // do whatever needs to be done after 5s
+        cnt = 0;                                      
+        digitalWriteFast(LED_BUILTIN, LOW);
+    }
+}
+void setup(){
+    pinMode(LED_BUILTIN, OUTPUT);
+
+    TeensyDelay::begin();                
+    TeensyDelay::addDelayChannel(callback);
+
+    digitalWriteFast(LED_BUILTIN, HIGH);
+    TeensyDelay::trigger(1);           // this will switch off the LED after 5s;         
+}
+void  loop(){    
+}
+```
 ## Configuration
 
 Depending on the board type **TeensyDelay** can work with any of the timers shown in the table below.  All timers marked with X are available for the given board. The default timer used by **TeensyDelay**  is marked with D. 
