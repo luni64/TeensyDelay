@@ -95,21 +95,6 @@ TeensyDelay was designed for calling a callback function some time after the cha
 	}
 	...
 ```
-
-## Performance
-The library is optimized for speed. Obviously, it wouldn't make much sense to use interrupt driven pulse generation if the interrupt and trigger functions would eat up the same processor time as the simple delay in the first code block above.
-
-To anlayze the performance of the library I added code to set pin 0 HIGH during the the trigger function and code to set pin 1 HIGH during the interrupt service routine. Trigger delay was set to 10µs. The shown measurement was done using a Teensy 3.6 @240MHz. 
-
-
-![Alt text](/media/timing.PNG?raw=true "Logic analyzer trace")
-
-The figure above shows that the time spent in the trigger function was about 0.25µs, the time spent in the interrupt service routine (including the callback) was about 0.38µs. In total we used 0.63µs to generate the 10µs pulse. For the stepper driver example calculated above we would now get a processor load of 
- 
- &emsp;&emsp;&emsp; *load* = 106'666 steps/s * 0.63 µs/step = 7%.
- 
- instead of the 80% using the simple delay. 
- 
 ## Long Delays
 Internally TeensyDelay uses one of the FTM or TPM timer modules of the processor. The code in config.h tries to calculate the timer prescaler such that one timer tick corresponds to about 1µs. Since the timer registers of the FTM or TPM modules are only 16bit wide the  delay time is limited to about 65ms. In case you need longer delays the following snippet shows how to achieve five seconds by choosing a base delay of 25ms and retriggering the timer from within the callback function:
 ```c++	
@@ -136,6 +121,22 @@ void setup(){
 void  loop(){    
 }
 ```
+
+## Performance
+The library is optimized for speed. Obviously, it wouldn't make much sense to use interrupt driven pulse generation if the interrupt and trigger functions would eat up the same processor time as the simple delay in the first code block above.
+
+To anlayze the performance of the library I added code to set pin 0 HIGH during the the trigger function and code to set pin 1 HIGH during the interrupt service routine. Trigger delay was set to 10µs. The shown measurement was done using a Teensy 3.6 @240MHz. 
+
+
+![Alt text](/media/timing.PNG?raw=true "Logic analyzer trace")
+
+The figure above shows that the time spent in the trigger function was about 0.25µs, the time spent in the interrupt service routine (including the callback) was about 0.38µs. In total we used 0.63µs to generate the 10µs pulse. For the stepper driver example calculated above we would now get a processor load of 
+ 
+ &emsp;&emsp;&emsp; *load* = 106'666 steps/s * 0.63 µs/step = 7%.
+ 
+ instead of the 80% using the simple delay. 
+ 
+
 ## Configuration
 
 Depending on the board type **TeensyDelay** can work with any of the timers shown in the table below.  All timers marked with X are available for the given board. The default timer used by **TeensyDelay**  is marked with D. 
