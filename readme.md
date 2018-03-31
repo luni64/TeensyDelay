@@ -153,6 +153,9 @@ Depending on the board type **TeensyDelay** can work with any of the timers show
 
 If you want to change the timer used by **TeensyDelay**  please edit line 22 in the file config.h according to the description given in the file. 
 
+**Why would you want to change the default timer?** 
+Some libraries require one or more of the FTM/TPM timers for their own purpose. To use those libraries together with TeensyDelay you can try to change the timer used by TeensyDelay. For example the PWM/analogWrite() functionality of Teensyduino might clash with TeensyDuino. You can find information about which analog pin uses which timer module here  https://www.pjrc.com/teensy/td_pulse.html (scroll down to the table in chapter 'PWM Frequency'). 
+
  ## Further information 
  For further information please have a look at the code in the provided examples and the source files. 
 
