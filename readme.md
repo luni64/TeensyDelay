@@ -1,3 +1,7 @@
+# TeensyDelay is no longer maintained
+**For new developments please use [TeensyTimerTool](https://github.com/luni64/TeensyTimerTool) which provides much more functionality and works for the new T4.0 also.**
+
+
 # TeensyDelay
 ## Problem to be Solved 
 
